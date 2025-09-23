@@ -18,7 +18,12 @@ def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     ed_dist = 0
 
     # INSERT YOUR CODE
-
+        
+    # Вычисляем сумму квадратов разностей элементов
+    squared_diffs = np.sum((ts1 - ts2)**2)
+    
+    # Извлекаем квадратный корень из суммы
+    ed_dist = np.sqrt(squared_diffs)
     return ed_dist
 
 
