@@ -66,5 +66,27 @@ def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
     dtw_dist = 0
 
     # INSERT YOUR CODE
-
-    return dtw_dist
+    m, n = len(ts1), len(ts2)
+    
+    # Матрица накопления расстояний
+    D = np.zeros((m + 1, n + 1)) + np.inf
+    D[0][0] = 0
+    
+    # Если окно не задано, применяем полное заполнение матрицы
+    if r is None or r >= max(m, n):
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                cost = (ts1[i - 1] - ts2[j - 1]) ** 2
+                D[i][j] = cost + min(D[i - 1][j], D[i][j - 1], D[i - 1][j - 1])
+    else:
+        # Ограничиваем окно размерами (+/- r вокруг диагонали)
+        for i in range(1, m + 1):
+            lower_bound = max(1, i - r)
+            upper_bound = min(n, i + r)
+            
+            for j in range(lower_bound, upper_bound + 1):
+                cost = (ts1[i - 1] - ts2[j - 1]) ** 2
+                D[i][j] = cost + min(D[i - 1][j], D[i][j - 1], D[i - 1][j - 1])
+                
+    return D[m][n]
+    #return dtw_dist
