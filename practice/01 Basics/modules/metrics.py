@@ -1,5 +1,6 @@
 import numpy as np
 
+from modules.utils import z_normalize
 
 def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     """
@@ -43,8 +44,31 @@ def norm_ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
 
     norm_ed_dist = 0
 
-    # INSERT YOUR CODE
-
+    # Получаем длину временных рядов
+    n = len(ts1)
+    
+    # Применяем Z-нормировку к обоим временным рядам
+    norm_ts1 = z_normalize(ts1)
+    norm_ts2 = z_normalize(ts2)
+    
+    # Скалярное произведение нормализованных временных рядов
+    dot_product = np.dot(norm_ts1, norm_ts2)
+    
+    # Среднее значение обоих нормализованных временных рядов (равно нулю после z-нормировки)
+    mu_norm_ts1 = np.mean(norm_ts1)
+    mu_norm_ts2 = np.mean(norm_ts2)
+    
+    # Стандартное отклонение нормализованных временных рядов (равно единице после z-нормировки)
+    sigma_norm_ts1 = np.std(norm_ts1)
+    sigma_norm_ts2 = np.std(norm_ts2)
+    
+    # Знаменатель
+    denominator = n * sigma_norm_ts1 * sigma_norm_ts2
+    
+    # Расчёт нормализованной Евклидовой дистанции
+    numerator = abs(2 * n * (1 - ((dot_product - n*mu_norm_ts1*mu_norm_ts2)/denominator)))
+    norm_ed_dist = np.sqrt(np.abs(numerator))
+    
     return norm_ed_dist
 
 
