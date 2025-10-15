@@ -140,7 +140,7 @@ class NaiveBestMatchFinder(BestMatchFinder):
         """
 
         query = copy.deepcopy(query)
-        if (len(ts_data.shape) != 2): # time series set
+        if len(ts_data.shape) == 1: # time series set
             ts_data = sliding_window(ts_data, len(query))
 
         N, m = ts_data.shape
@@ -155,14 +155,17 @@ class NaiveBestMatchFinder(BestMatchFinder):
         }
 
         # INSERT YOUR CODE
+        if self.is_normalize:
+            query = z_normalize(query)
+        
         for i in range(N):
-          subsequence = ts_data[i:i+m]
-          if is_normalize:
+          subsequence = ts_data[i]
+          if self.is_normalize:
               subsequence = z_normalize(subsequence)
           dist = DTW_distance(query, subsequence, self.r)
           if dist < bsf:
               dist_profile[i] = dist
-              bestmatch = topK_match(dist_profile, excl_zone, self.topK, bsf)
+              bestmatch = topK_match(dist_profile, excl_zone, self.topK)
               if len(bestmatch['indices']) == self.topK:
                   bsf = max(bestmatch['distances'])
         return bestmatch
