@@ -155,7 +155,15 @@ class NaiveBestMatchFinder(BestMatchFinder):
         }
         
         # INSERT YOUR CODE
-
+        for i in range(N):
+          subsequence = ts_data[i:i+m]
+          if is_normalize:
+              subsequence = z_normalize(subsequence)
+          dist = DTW_distance(query, subsequence, self.r)
+          dist_profile[i] = dist
+          if dist < bsf:
+              bsf = dist
+        bestmatch = topK_match(dist_profile, excl_zone, topK, bsf)
         return bestmatch
 
 
