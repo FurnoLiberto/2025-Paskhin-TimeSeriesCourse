@@ -36,8 +36,13 @@ def z_normalize(ts: np.ndarray) -> np.ndarray:
     norm_ts: z-normalized time series
     """
 
-    norm_ts = (ts - np.mean(ts, axis=0)) / np.std(ts, axis=0)
-
+    mean = np.mean(ts, axis=0)
+    std = np.std(ts, axis=0)
+    
+    # Добавляем маленькое число (эпсилон) для предотвращения деления на ноль
+    epsilon = 1e-10 
+        
+    norm_ts = (ts - mean) / (std + epsilon)
     return norm_ts
 
 
