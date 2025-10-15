@@ -160,10 +160,11 @@ class NaiveBestMatchFinder(BestMatchFinder):
           if is_normalize:
               subsequence = z_normalize(subsequence)
           dist = DTW_distance(query, subsequence, self.r)
-          dist_profile[i] = dist
           if dist < bsf:
-              bsf = dist
-        bestmatch = topK_match(dist_profile, excl_zone, topK, bsf)
+              dist_profile[i] = dist
+              bestmatch = topK_match(dist_profile, excl_zone, self.topK, bsf)
+              if len(bestmatch['indices']) == self.topK:
+                  bsf = max(bestmatch['distances'])
         return bestmatch
 
 
