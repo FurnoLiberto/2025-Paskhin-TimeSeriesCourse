@@ -1,5 +1,5 @@
 import numpy as np
-
+from numba import jit
 
 def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     """
@@ -69,6 +69,7 @@ def norm_ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     return norm_ed_dist
 
 
+@jit(nopython=True)
 def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
     """
     Calculate DTW distance
@@ -81,12 +82,12 @@ def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
     Returns
     dtw_dist: DTW distance between ts1 and ts2
     """
+    ts1 = ts1.reshape(-1)
+    ts2 = ts2.reshape(-1)
 
     n = len(ts1)
     m = len(ts2)
-
-    # Вычисляем размер окна поиска в абсолютных значениях
-    r = int(np.ceil(n * r))
+    w = int(max([n, m]) * r)
 
     # Создаем матрицу dtw размером (n+1) x (m+1) и инициализируем ее значениями бесконечности
     dtw_matrix = np.full((n + 1, m + 1), np.inf)
@@ -96,8 +97,8 @@ def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
     # Заполняем матрицу dtw, используя динамическое программирование
     for i in range(1, n + 1):
         # Определяем границы окна поиска
-        start = max(1, i - r)
-        end = min(m + 1, i + r + 1)
+        start = max(1, i - w)
+        end = min(m + 1, i + w + 1)
         for j in range(start, end):
             # Вычисляем евклидово расстояние между текущими элементами временных рядов
             cost = (ts1[i-1] - ts2[j-1])**2
