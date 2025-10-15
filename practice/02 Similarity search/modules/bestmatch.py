@@ -150,10 +150,10 @@ class NaiveBestMatchFinder(BestMatchFinder):
         bsf = np.inf
 
         bestmatch = {
-            'index' : [],
-            'distance' : []
+            'indices' : [],
+            'distances' : []
         }
-        
+
         # INSERT YOUR CODE
         for i in range(N):
           subsequence = ts_data[i:i+m]
