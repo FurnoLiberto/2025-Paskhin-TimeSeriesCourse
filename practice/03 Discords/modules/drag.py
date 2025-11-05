@@ -160,7 +160,7 @@ def refine_candidates(T, m, M_T, Σ_T, is_cands):
     excl_zone = int(np.ceil(m / config.STUMPY_EXCL_ZONE_DENOM)) 
     k = T.shape[0] - m + 1
     
-    P = np.full(k, np.NINF, dtype=np.float64) # matrix profile
+    P = np.full(k, -np.inf, dtype=np.float64) # matrix profile
     I = np.full(k, -1, dtype=np.int64) # index of Nearest Neighbor 
     
     for idx in np.flatnonzero(is_cands): 
