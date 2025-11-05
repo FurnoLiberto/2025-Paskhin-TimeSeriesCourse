@@ -183,7 +183,7 @@ def refine_candidates(T, m, M_T, Σ_T, is_cands):
         discords_idx.append(idx)
         discords_dist.append(P[idx])
         discords_nn_idx.append(I[idx])  
-        core.apply_exclusion_zone(P, idx, excl_zone, np.NINF)
+        core.apply_exclusion_zone(P, idx, excl_zone, -np.inf)
      
     return discords_idx, discords_dist, discords_nn_idx
 
